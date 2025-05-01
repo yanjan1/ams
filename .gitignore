@@ -1,0 +1,50 @@
+# Laravel & PHP
+/vendor/
+/node_modules/
+.env
+.phpunit.result.cache
+Homestead.yaml
+Homestead.json
+/public/storage
+/storage/*.key
+/storage/app/public
+/storage/debugbar
+
+# Laravel log & cache files
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+
+# Composer & NPM
+composer.lock
+npm-debug.log
+yarn-error.log
+pnpm-lock.yaml
+
+# OS & IDE files
+.DS_Store
+Thumbs.db
+*.sublime-workspace
+*.sublime-project
+.idea/
+.vscode/
+*.log
+
+# Laravel specific files
+.env.*
+.env.backup
+.env.local
+.env.production
+.env.testing
+
+# Ignored by Laravel deployment tools
+/.dep
+/deploy.php
+
+# Optional: ignore test coverage reports
+/coverage/
+
+# Optional: ignore database dumps
+*.sql
+*.sqlite
