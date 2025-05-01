@@ -48,3 +48,6 @@ Thumbs.db
 # Optional: ignore database dumps
 *.sql
 *.sqlite
+
+
+prompt.md
