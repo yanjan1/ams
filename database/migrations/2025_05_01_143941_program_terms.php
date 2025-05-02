@@ -6,12 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    // these are static terms each program has
+    // like 1st semester, or like 1 quarter, each will have its duration in month
+    // forien key to program
     public function up(): void
     {
-        //
+        Schema::create('program_term', function (Blueprint $table) {
+            $table->id()->primary();
+            $table->string('name')->nullable(false);
+            $table->integer('duration_in_months')->nullable(false);
+            $table->integer('program_id')->unsigned()->nullable(false);
+            $table->foreign('program_id')->references('id')->on('program')->onDelete('cascade')->nullable(false);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('program_term');
     }
 };

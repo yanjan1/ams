@@ -12,6 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         //
+        Schema::create('program_term_course', function (Blueprint $table) {
+            $table->id();
+            $table->foreign('term_id')->references('id')->on('program_term')->onDelete('cascade');
+            $table->foreign('course_id')->references('id')->on('course')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**

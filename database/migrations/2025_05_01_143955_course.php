@@ -11,7 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::craete('course', function (Blueprint $table){
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('description')->nullable(false);
+            $table->text('syllabus')->nullable(false);
+            $table->foreign('department_id')->references('id')->on('department')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('course');
     }
 };
