@@ -25,6 +25,7 @@ return new class extends Migration
             $table->id();
 
             // forign key refrence
+            $table->unsignedBigInteger('user_id');
             $table
                 ->foreign('user_id')
                 ->references('id')
@@ -32,6 +33,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->nullable(false);
 
+            $table->unsignedBigInteger('role_id');
             $table
                 ->foreign('role_id')
                 ->references('id')

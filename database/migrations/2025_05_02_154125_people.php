@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('parent_name')->unique()->nullable(false);
             $table->string('stundent_address')->nullable(false);
             $table->string('student_phone_no')->nullable(false);
+            $table->unsignedInteger('user_id')->nullable(false);
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -29,6 +31,8 @@ return new class extends Migration
             $table->string('aadhar_number')->unique()->nullable(false);
             $table->string('faculty_address')->nullable(false);
             $table->string('faculty_phone_no')->nullable(false);
+            $table->unsignedInteger('user_id')->nullable(false);
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -39,6 +43,8 @@ return new class extends Migration
             $table->string('aadhar_number')->unique()->nullable(false);
             $table->string('deo_address')->nullable(false);
             $table->string('deo_phone_no')->nullable(false);
+            $table->unsignedInteger('user_id')->nullable(false);
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->timestamps();
         });
 
