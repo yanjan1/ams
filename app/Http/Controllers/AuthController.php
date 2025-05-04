@@ -17,4 +17,9 @@ class AuthController extends Controller
     {
         return view('auth.login', ['title' => 'AMS | Login']);
     }
+
+    public function showForgotPasswordForm(){
+        return view('auth.forgotpass', ['title' => "AMS | Reset Password"]);
+    }
+    
 }

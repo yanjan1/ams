@@ -1,10 +1,11 @@
-<section class="text-center my-5">
-    <div class="container">
-      <footer>
-        <p class="lead d-inline">&copy; Yanjanendra Kafaltiya.
-          <a href="https://github.com/yanjan1/ams" class="text-reset">(Source code)</a>
-        </p>
-        <p class="ms-auto">{{ now()->format('Y') }}</p>
+<section class="py-5 bg-light">
+    <div class="container mt-5">
+      <footer class="text-muted">
+        <h4>Minor Project on Acedemics management system</h4>
+        </h4>
+        <p class="mb-0">Source Code : <a href="https://github.com/yanjan1/ams">https://github.com/yanjan1/ams</a></p>
+        <p class="mb-0">Developed By : Vansh, Vedika, Vimal, Yanjanendra, Yogesh & Kamlesh</p>
+        <p>{{ now()->format('Y') }}</p>
       </footer>
     </div>
 </section>

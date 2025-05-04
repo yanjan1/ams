@@ -1,8 +1,8 @@
 <nav
-class="navbar navbar-dark bg-dark navbar-expand-lg pt-3 pb-3 text-light"
+class="navbar navbar-light bg-light navbar-expand-lg pt-3 pb-3 text-light"
 >
 <div class="container">
-  <a href="#" class="navbar-brand">
+  <a href="/" class="navbar-brand">
     <img src="/images/logo.svg" height="35px" />
   </a>
   <button
@@ -14,9 +14,9 @@ class="navbar navbar-dark bg-dark navbar-expand-lg pt-3 pb-3 text-light"
     <span class="navbar-toggler-icon text-light"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav text-light ms-auto">
+    <ul class="navbar-nav ms-auto">
       <li class="nav-item">
-        <a href="" class="nav-link text-light">For Help Contact +91-XXXX-XX-8922</a>
+        <a href="" class="nav-link">For Help Contact +91-XXXX-XX-8922</a>
       </li>
     </ul>
   </div>
