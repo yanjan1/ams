@@ -11,8 +11,12 @@ return new class extends Migration
         Schema::create('user', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string('password');
-            $table->boolean('active')->default(false);
+            $table->string('password')->nullable();
+            $table->rememberToken()->nullable();
+            // activa indicated first time password set
+            $table->boolean('active')->default(false)->nullable(false);
+            // login_allow indicates if user is allowed to login
+            $table->boolean('login_allow')->default(false)->nullable(false);
             $table->timestamps();
         });
 
