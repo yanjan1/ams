@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('otp', function(Blueprint $table){
+        Schema::create('token', function (Blueprint $table) {
             $table->id();
+            $table->string('token');
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
-            $table->string('otp');
-            $table->boolean('is_verified')->default(false);
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('expires_at');
-            $table->enum('purpose', ['account_activation', 'reset_password']); 
+            $table->enum('purpose', ['password_reset', 'email_verification', 'account_activation']);
+            $table->dateTime('expires_at');
+            $table->boolean('is_used')->default(false);
+            $table->timestamps();
         });
     }
 
@@ -28,6 +28,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('otp');
+        Schema::dropIfExists('token');
+
     }
 };

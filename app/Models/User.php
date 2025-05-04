@@ -14,9 +14,16 @@ class User extends Autheticatable
     protected $fillable = [
         'email',
         'active',
+        'is_login_allowed',
     ];
     protected $hidden = [
         'password',
         'remember_token',
     ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'active' => 'boolean',
+        'is_login_allowed' => 'boolean',
+    ];
+    
 }

@@ -11,7 +11,6 @@ Route::get('/', function () {
 
 Route::get('/email', [EmailController::class, 'showEmails'])->name('email');
 
-
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request')->name('forgot-password');

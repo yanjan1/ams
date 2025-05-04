@@ -19,7 +19,7 @@ class otp extends Model
     public $timestamps = false;
 
     // Define the purpose constants
-    const PURPOSE_ACTIVATE_ACCOUNT = 'activate_account';
+    const PURPOSE_ACTIVATE_ACCOUNT = 'account_activation';
     const PURPOSE_RESET_PASSWORD = 'reset_password';
 
     protected $casts = [

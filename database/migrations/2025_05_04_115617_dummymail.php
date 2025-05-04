@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('owner_name');
             $table->string('email')->unique()->nullable(false);
+            $table->timestamps();
         });
 
         Schema::create('email', function (Blueprint $table) {
@@ -28,13 +29,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('email_recievers', function (Blueprint $table) {
+        Schema::create('email_receivers', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('email_id')->nullable(false);
             $table->foreign('email_id')->references('id')->on('email')->onDelete('cascade');
 
-            $table->unsignedInteger('reciver_id')->nullable(false);
-            $table->foreign('reciver_id')->references('id')->on('email_ids')->onDelete('cascade');
+            $table->unsignedInteger('receiver_id')->nullable(false);
+            $table->foreign('receiver_id')->references('id')->on('email_ids')->onDelete('cascade');
             $table->timestamps();
         });
 
@@ -47,6 +48,7 @@ return new class extends Migration
     {
         
         Schema::dropIfExists('email_recievers');
+        Schema::dropIfExists('email_receivers');
         Schema::dropIfExists('email');
         Schema::dropIfExists('email_ids');
     }
