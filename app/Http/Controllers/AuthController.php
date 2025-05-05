@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Email;
+use App\Models\EmailId;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\otp;
-use App\Models\Token;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -54,25 +55,82 @@ class AuthController extends Controller
             $user = Auth::user();
 
             if (!$user->active) {
-                $token = bin2hex(random_bytes(8));
-                otp::create(
+                $newotp = otp::create(
                     [
                         'user_id' => $user->id,
-                        'otp' => Str::random(8),
-                        'token' => $token,
+                        'otp' => Str::upper(Str::random(10)),
+                        'token' => bin2hex(random_bytes(8)),
                         'is_verified' => false,
                         'purpose' => otp::PURPOSE_ACTIVATE_ACCOUNT
                     ]
                 );
-                
-                session(['token', $token]);
-                return redirect().route('activation_otp_verify');
-            }
-            else{
-                return redirect().route('dashboard');
+
+                $sender = EmailId::create([
+                    'email' => env('EMAIL_SENDER_ADDRESS'),
+                    'owner_name' => 'AMS Admin',
+                ]);
+
+                $recipient = EmailId::create([
+                    'email' => $user->email,
+                    'owner_name' => "",
+                ]);
+
+                $email = Email::create([
+                    'sender_id' => $sender->id,
+                    'subject' => 'Account activation mail',
+                    'body' => 'Your otp for account activation is ' . $newotp->otp
+                ]);
+
+                $email->receivers()->attach([$recipient->id]);
+
+                session(['token' => $newotp->token]);
+                return redirect() . route('activation-otp-verify');
+            } else {
+                return redirect() . route('dashboard');
             }
         }
 
         return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
+    }
+
+
+    public function sendOTPAndVerify(Request $req)
+    {
+        $user = Auth::user();
+        if ($user->active) {
+            return redirect('dashboard');
+        }
+        // else if session has a valid token and its purpose is account activation only show the form 
+        $sessionToken = session('token');
+        if ($sessionToken) {
+            $otp_check = otp::where('token', $sessionToken)
+                ->where('user_id', $user->id)
+                ->where('purpose', otp::PURPOSE_ACTIVATE_ACCOUNT)
+                ->where('is_verified', false)
+                ->first();
+            if ($otp_check && $otp_check->tries < 4) {
+                return view('auth.verifyActiationOtp');
+            }
+        }
+
+        Auth::logout();
+        $req->session()->invalidate();
+        $req->session()->regenerateToken();
+        return redirect()->route('login')->withErrors(['otp' => 'Session expired. Please login again.']);
+
+        // otherwise redirect to login 
+    }
+
+    public function logout(Request $request)
+    {
+        if (!$request->isMethod('post')) {
+            abort(405);
+        }
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 }

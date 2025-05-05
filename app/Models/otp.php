@@ -14,8 +14,10 @@ class otp extends Model
         'is_verified',
         'created_at',
         'expires_at',
-        'purpose'
+        'purpose',
+        'tries'
     ];
+
 
     public $timestamps = false;
 

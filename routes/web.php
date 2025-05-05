@@ -20,7 +20,23 @@ Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm']
 
 Route::post('/forgot-password', [AuthController::class, 'sendOTPAndVerify'])->name('forgot-password.submit')->name('forget-password-post');
 
-Route::get('/activation_otp_verify', [AuthController::class, 'sendOTPAndVerify'])->middleware('auth')->name('activation_otp_verify');
+Route::get('/activation_otp_verify', [AuthController::class, 'sendOTPAndVerify'])->middleware('auth')->name('activation-otp-verify');
+
+Route::post('/activation-otp-verify', [AuthController::class, 'activationOTPCheck'])
+->middleware('auth')->name('otp-activation-verify');
 
 // dashboard starts here
 Route::get('/dashboard', [DashboardController::class, 'getDashboard'])->middleware('auth')->name('dashboard');
+
+
+
+// logout is here
+
+//  no direct logout access
+Route::get('/logout', function () {
+    abort(403, 'Forbidden');
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+
