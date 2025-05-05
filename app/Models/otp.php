@@ -8,8 +8,9 @@ class otp extends Model
 {
     protected $table = 'otp';
     protected $fillable = [
-        'email',
+        'user_id',
         'otp',
+        'token',
         'is_verified',
         'created_at',
         'expires_at',

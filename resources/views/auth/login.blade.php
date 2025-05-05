@@ -4,7 +4,7 @@
 <section class="login-form my-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-4 bg-light p-2 rounded">
+            <div class="col-md-6 bg-light p-2 rounded">
                 {{-- login form --}}
                 <div class="card">
                     <div class="card-header text-center">
@@ -28,11 +28,15 @@
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>
                         {{-- error message --}}
-                        @if (session('error'))
+                        @if ($errors->any())
                             <div class="alert alert-danger mt-3">
-                                {{ session('error') }}
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li class="mb-0">{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
-                        @endif
+                         @endif
                         {{-- forgot password link --}}
                         <div class="text-center mt-3">
                             <a href="/forgot-password" class="text-decoration-none">Forgot Password?</a>

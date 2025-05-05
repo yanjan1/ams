@@ -19,16 +19,18 @@ class AuthController extends Controller
         return view('auth.login', ['title' => 'AMS | Login']);
     }
 
-    public function showForgotPasswordForm(){
+    public function showForgotPasswordForm()
+    {
         return view('auth.forgotpass', ['title' => "AMS | Reset Password"]);
     }
 
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $remember = $request->filled('remember');
         $validator = Validator::make($credentials, [
             'email' => 'required|email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -45,20 +47,32 @@ class AuthController extends Controller
             return redirect()->back()->withErrors(['error' => 'Login is not allowed for this user.'])->withInput();
         }
 
-        // check if user has activated the account
-        if ($user->active == 0) {            
-            // create otp
+        if (Auth::attempt(
+            $credentials,
+            $remember
+        )) {
+            $user = Auth::user();
 
-            // send otp to mail, create a mail, from env.MAIL_SENDER to user.email
-
-            // next redirect to the otp verification page
-            // but i also need some uuid assosiated with otp
-
-            
+            if (!$user->active) {
+                $token = bin2hex(random_bytes(8));
+                otp::create(
+                    [
+                        'user_id' => $user->id,
+                        'otp' => Str::random(8),
+                        'token' => $token,
+                        'is_verified' => false,
+                        'purpose' => otp::PURPOSE_ACTIVATE_ACCOUNT
+                    ]
+                );
+                
+                session(['token', $token]);
+                return redirect().route('activation_otp_verify');
+            }
+            else{
+                return redirect().route('dashboard');
+            }
         }
-
 
         return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
     }
-    
 }

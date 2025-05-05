@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->string('otp');
+            $table->string('token');
             $table->boolean('is_verified')->default(false);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('expires_at');
