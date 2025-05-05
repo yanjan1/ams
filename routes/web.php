@@ -7,7 +7,7 @@ use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return redirect()->route('login');
-});
+})->name('home');
 
 
 Route::get('/email', [EmailController::class, 'showEmails'])->name('email');
@@ -18,7 +18,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request')->name('forgot-password');
 
-Route::post('/forgot-password', [AuthController::class, 'sendOTPAndVerify'])->name('forgot-password.submit')->name('forget-password-post');
+Route::post('/forgot-password', [AuthController::class, 'sendOTPAndVerify'])->name('forgot-password.submit');
 
 Route::get('/activation_otp_verify', [AuthController::class, 'sendOTPAndVerify'])->middleware('auth')->name('activation-otp-verify');
 
@@ -28,14 +28,13 @@ Route::post('/activation-otp-verify', [AuthController::class, 'activationOTPChec
 // dashboard starts here
 Route::get('/dashboard', [DashboardController::class, 'getDashboard'])->middleware('auth')->name('dashboard');
 
+Route::post('/dashboard/roleselector', [DashboardController::class, 'roleselector'])->middleware('auth')->name('role-selector');
 
 
 // logout is here
 
 //  no direct logout access
-Route::get('/logout', function () {
-    abort(403, 'Forbidden');
-});
+Route::get('/logout', [AuthController::class, 'getLogout'])->middleware('auth')->name('getLogout');
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 

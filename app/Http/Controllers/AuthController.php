@@ -17,6 +17,9 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
+        if(Auth::user()){
+            return redirect()->route('dashboard');
+        }
         return view('auth.login', ['title' => 'AMS | Login']);
     }
 
@@ -44,7 +47,7 @@ class AuthController extends Controller
         }
 
         // check if login is allowed
-        if ($user->is_login_allowed == 0) {
+        if (!$user->login_allow) {
             return redirect()->back()->withErrors(['error' => 'Login is not allowed for this user.'])->withInput();
         }
 
@@ -84,9 +87,9 @@ class AuthController extends Controller
                 $email->receivers()->attach([$recipient->id]);
 
                 session(['token' => $newotp->token]);
-                return redirect() . route('activation-otp-verify');
+                return redirect()->route('activation-otp-verify');
             } else {
-                return redirect() . route('dashboard');
+                return redirect()->route('dashboard');
             }
         }
 
@@ -107,7 +110,11 @@ class AuthController extends Controller
                 ->where('user_id', $user->id)
                 ->where('purpose', otp::PURPOSE_ACTIVATE_ACCOUNT)
                 ->where('is_verified', false)
+                ->where(function ($query) {
+                    $query->where('created_at', '>=', now()->subMinutes(10));
+                })
                 ->first();
+
             if ($otp_check && $otp_check->tries < 4) {
                 return view('auth.verifyActiationOtp');
             }
@@ -119,6 +126,52 @@ class AuthController extends Controller
         return redirect()->route('login')->withErrors(['otp' => 'Session expired. Please login again.']);
 
         // otherwise redirect to login 
+    }
+
+    public function activationOTPCheck(Request $req){
+        $sessionToken = session('token');
+
+        if (!$sessionToken) {
+            return redirect()->route('login')->withErrors(['otp' => 'Session expired. Please login again.']);
+        }
+
+        $otp_check = otp::where('token', $sessionToken)
+            ->where('user_id', Auth::id())
+            ->where('purpose', otp::PURPOSE_ACTIVATE_ACCOUNT)
+            ->where('is_verified', false)
+            ->first();
+
+        if (!$otp_check) {
+            return redirect()->route('login')->withErrors(['otp' => 'Invalid or expired OTP. Please login again.']);
+        }
+
+        if ($otp_check->tries >= 4) {
+            $otp_check->delete();
+            session()->forget('token');
+            Auth::logout();
+            $req->session()->invalidate();
+            $req->session()->regenerateToken();
+            return redirect()->route('login')->withErrors(['otp' => 'Too many failed attempts. Please login again.']);
+        }
+
+        if ($req->otp !== $otp_check->otp) {
+            $otp_check->increment('tries');
+            return redirect()->back()->withErrors(['otp' => 'Invalid OTP. Please try again.']);
+        }
+
+        $otp_check->update(['is_verified' => true]);
+        session()->forget('token');
+        $otp_check->delete();
+
+        $user = Auth::user();
+        $user->update(['active' => true]);
+
+        return redirect()->route('')->with('success', 'Account activated successfully.');
+    }
+
+
+    public function getLogout(Request $request){
+        return view('auth.logout', ['title' => 'AMS | Logout']);
     }
 
     public function logout(Request $request)

@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('title', $title)
 @section('content')
-    <div class="container d-flex justify-content-center mt-5">
+    <div class="container d-flex justify-content-center my-5">
         <div class="card col-sm-5">
             <div class="card-body">
                 <div class="card-title text-center">
-                    <h2>Forgot Password</h2>
+                    <h4>Forgot Password</h4>
                     </div>
                 <form method="POST" action="{{ route('forgot-password.submit') }}">
                     @csrf
