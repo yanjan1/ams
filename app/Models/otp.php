@@ -26,6 +26,7 @@ class otp extends Model
     const PURPOSE_RESET_PASSWORD = 'reset_password';
 
     protected $casts = [
+        'is_verified' => 'boolean',
         'created_at' => 'datetime',
         'expires_at' => 'datetime',
     ];

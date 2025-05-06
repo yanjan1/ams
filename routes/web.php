@@ -20,20 +20,23 @@ Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm']
 
 Route::post('/forgot-password', [AuthController::class, 'sendOTPAndVerify'])->name('forgot-password.submit');
 
-Route::get('/activation_otp_verify', [AuthController::class, 'sendOTPAndVerify'])->middleware('auth')->name('activation-otp-verify');
+Route::get('/activation_otp_verify', [AuthController::class, 'sendOTPAndVerify'])->middleware(['auth', 'tokenExists'])->name('activation-otp-form');
 
 Route::post('/activation-otp-verify', [AuthController::class, 'activationOTPCheck'])
 ->middleware('auth')->name('otp-activation-verify');
 
 // dashboard starts here
-Route::get('/dashboard', [DashboardController::class, 'getDashboard'])->middleware('auth')->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'getDashboard'])->middleware(['auth', 'activation'])->name('dashboard');
 
-Route::post('/dashboard/roleselector', [DashboardController::class, 'roleselector'])->middleware('auth')->name('role-selector');
+Route::post('/dashboard/roleselector', [DashboardController::class, 'roleselector'])->middleware(['auth', 'activation'])->name('role-selector');
+
+
+
+
 
 
 // logout is here
 
-//  no direct logout access
 Route::get('/logout', [AuthController::class, 'getLogout'])->middleware('auth')->name('getLogout');
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
