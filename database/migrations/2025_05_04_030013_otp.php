@@ -21,7 +21,18 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('expires_at');
             $table->unsignedTinyInteger('tries')->default(0);
-            $table->enum('purpose', ['account_activation', 'reset_password']); 
+            $table->enum('purpose', ['login', 'reset_password']); 
+        });
+
+
+        Schema::create('token', function(Blueprint $table){
+            $table->id();
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            $table->string('token')->unique();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('expires_at');
+            $table->enum('purpose', ['reset_password']); 
         });
     }
 
