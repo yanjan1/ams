@@ -16,7 +16,7 @@ class checkActivationToken
             $token = session('activation_token');
             $cotp = otp::where(['token' => $token])->first();
 
-            if($cotp && ($cotp->is_verified || $cotp->expires_at < now())){
+            if($cotp && ($cotp->is_verified || now()->greaterThan($cotp->expires_at))){
                 session()->forget('activation_token');
                 return redirect()->route('login');
             }else{

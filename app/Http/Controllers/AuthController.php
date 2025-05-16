@@ -50,12 +50,27 @@ class AuthController extends Controller
 
     public function sendOTPAndVerify(Request $req)
     {
-       return view('auth.verifyActiationOtp', ['title' => 'Verify The token']);
+        return view('auth.verifyActiationOtp', ['title' => 'Verify The token']);
     }
 
     public function activationOTPCheck(Request $req)
     {
-      
+        $validated = $req->validate([
+            '_token' => 'required|string',
+            'otp'    => 'required|string|size:10',
+        ]);
+
+        $token = $validated['_token'];
+        $cotp = $validated['otp'];
+
+        if(session('activation_token') == $token){
+            $otpp = otp::where('token', $token);
+            
+
+        }else{
+            return back()->with('error', 'Invalid Request');
+        }
+
     }
 
 
